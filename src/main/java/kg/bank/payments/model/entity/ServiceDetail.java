@@ -1,11 +1,9 @@
-package kg.bank.payments.model.entity.serviceId;
+package kg.bank.payments.model.entity;
 
+import kg.bank.payments.model.entity.account.Account;
+import kg.bank.payments.model.entity.serviceId.Service;
 import kg.bank.payments.utils.DateUtil;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
@@ -13,20 +11,31 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Table(name = "tb_service_balances")
+@Table(name = "tb_service_details")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BalanceService {
+public class ServiceDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "balance")
-    BigDecimal balance;
+    @ManyToOne
+    @JoinColumn(name = "service_id", referencedColumnName = "id")
+    Service service;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    Account account;
+
+    @Column(name = "percent_price")
+    Double percentPrice;
+
+    @Column(name = "fix_price")
+    BigDecimal fixPrice;
 
     @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss:S")
     @Column(name = "start_date", nullable = false)
@@ -35,10 +44,6 @@ public class BalanceService {
     @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss:S")
     @Column(name = "end_date", nullable = false)
     Date endDate;
-
-    @ManyToOne
-    @JoinColumn(name = "service_id", referencedColumnName = "id")
-    Service service;
 
     @PrePersist
     private void setDates() {

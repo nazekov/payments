@@ -1,5 +1,7 @@
-package kg.bank.payments.model.entity.serviceId;
+package kg.bank.payments.model.entity.account;
 
+import kg.bank.payments.enums.Status;
+import kg.bank.payments.model.entity.serviceId.Service;
 import kg.bank.payments.utils.DateUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,25 +10,26 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Table(name = "tb_service_balances")
+@Table(name = "tb_account_statuses")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BalanceService {
+public class StatusAccount {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "balance")
-    BigDecimal balance;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, columnDefinition = "ACTIVE")
+    Status status;
 
     @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss:S")
     @Column(name = "start_date", nullable = false)
@@ -37,8 +40,8 @@ public class BalanceService {
     Date endDate;
 
     @ManyToOne
-    @JoinColumn(name = "service_id", referencedColumnName = "id")
-    Service service;
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    Account account;
 
     @PrePersist
     private void setDates() {

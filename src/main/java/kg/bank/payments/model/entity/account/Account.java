@@ -1,5 +1,6 @@
 package kg.bank.payments.model.entity.account;
 
+import kg.bank.payments.model.entity.ServiceDetail;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "tb_services")
+@Table(name = "tb_accounts")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -25,5 +26,12 @@ public class Account {
     @Column(name = "name", nullable = false, unique = true)
     String name;
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    List<BalanceAccount> balances;
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    List<StatusAccount> statuses;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    List<ServiceDetail> serviceDetails;
 }

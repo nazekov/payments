@@ -30,11 +30,11 @@ public class StatusService {
     Status status;
 
     @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss:S")
-    @Column(nullable = false)
+    @Column(name = "start_date", nullable = false)
     Date startDate;
 
     @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss:S")
-    @Column(nullable = false)
+    @Column(name = "end_date", nullable = false)
     Date endDate;
 
     @ManyToOne

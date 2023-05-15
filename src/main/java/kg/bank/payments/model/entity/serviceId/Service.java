@@ -1,5 +1,6 @@
 package kg.bank.payments.model.entity.serviceId;
 
+import kg.bank.payments.model.entity.ServiceDetail;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,5 +30,8 @@ public class Service {
     List<BalanceService> balances;
 
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
-    List<StatusService> statuces;
+    List<StatusService> statuses;
+
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
+    List<ServiceDetail> serviceDetails;
 }
