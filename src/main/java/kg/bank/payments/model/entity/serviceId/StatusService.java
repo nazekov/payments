@@ -1,6 +1,6 @@
 package kg.bank.payments.model.entity.serviceId;
 
-import kg.bank.payments.enums.Status;
+import kg.bank.payments.enums.ServiceState;
 import kg.bank.payments.utils.DateUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,8 +26,8 @@ public class StatusService {
     Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false, columnDefinition = "ACTIVE")
-    Status status;
+    @Column(name = "state", nullable = false)
+    ServiceState state;
 
     @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss:S")
     @Column(name = "start_date", nullable = false)

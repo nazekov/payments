@@ -1,7 +1,7 @@
 package kg.bank.payments.model.entity.account;
 
-import kg.bank.payments.enums.Status;
-import kg.bank.payments.model.entity.serviceId.Service;
+import kg.bank.payments.enums.AccountState;
+import kg.bank.payments.enums.ServiceState;
 import kg.bank.payments.utils.DateUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -28,8 +28,8 @@ public class StatusAccount {
     Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false, columnDefinition = "ACTIVE")
-    Status status;
+    @Column(name = "state", nullable = false)
+    AccountState accountState;
 
     @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss:S")
     @Column(name = "start_date", nullable = false)

@@ -32,7 +32,7 @@ public class ServiceDetail {
     Account account;
 
     @Column(name = "percent_price")
-    Double percentPrice;
+    BigDecimal percentPrice;
 
     @Column(name = "fix_price")
     BigDecimal fixPrice;
