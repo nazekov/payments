@@ -31,11 +31,11 @@ public class ServiceDetail {
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     Account account;
 
-    @Column(name = "percent_price")
-    BigDecimal percentPrice;
+    @Column(name = "percent_sum")
+    BigDecimal percentSum;
 
-    @Column(name = "fix_price")
-    BigDecimal fixPrice;
+    @Column(name = "fix_sum")
+    BigDecimal fixSum;
 
     @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss:S")
     @Column(name = "start_date", nullable = false)

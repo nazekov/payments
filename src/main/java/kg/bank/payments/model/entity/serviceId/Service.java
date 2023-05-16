@@ -27,8 +27,8 @@ public class Service {
     @Column(name = "name", nullable = false, unique = true)
     String name;
 
-    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
-    List<BalanceService> balanceList;
+//    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
+//    List<BalanceService> balanceList;
 
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
     List<StatusService> statuseList;
