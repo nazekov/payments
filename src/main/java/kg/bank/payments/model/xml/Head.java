@@ -2,10 +2,13 @@ package kg.bank.payments.model.xml;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Date;
 
 @XmlRootElement(name = "HEAD")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -15,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NoArgsConstructor
 @ToString
 @AllArgsConstructor
-public class HEAD {
+public class Head {
 
     @XmlAttribute(name = "DTS")
     String dts;
@@ -26,6 +29,6 @@ public class HEAD {
     @XmlAttribute(name = "QID")
     String qid;
 
-    @XmlAttribute(name = "QID")
+    @XmlAttribute(name = "OP")
     String op;
 }

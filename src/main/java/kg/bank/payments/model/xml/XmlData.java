@@ -15,11 +15,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NoArgsConstructor
 @ToString
 @AllArgsConstructor
-public class XML {
+public class XmlData {
 
-    @XmlElement
-    HEAD head;
+    @XmlElement(name = "HEAD")
+    Head head;
 
-    @XmlElement
-    BODY body;
+    @XmlElement(name = "BODY")
+    Body body;
 }
