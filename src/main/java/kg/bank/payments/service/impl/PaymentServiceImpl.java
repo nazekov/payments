@@ -41,6 +41,17 @@ public class PaymentServiceImpl implements PaymentService {
         return null;
     }
 
+    @Override
+    public XmlData execute(XmlData request) {
+        String op = request.getHead().getOp();
+        if (op.equals("QE11")) {
+            return check(request);
+        } else if (op.equals("QE10")) {
+            return pay(request);
+        }
+        return null;
+    }
+
     private XmlData getResponseTransfer(XmlData request, ServiceJob serviceJob) {
 
         /*

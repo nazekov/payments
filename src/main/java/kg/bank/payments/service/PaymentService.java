@@ -7,4 +7,6 @@ public interface PaymentService {
     XmlData check(XmlData request);
 
     XmlData pay(XmlData request);
+
+    XmlData execute(XmlData request);
 }

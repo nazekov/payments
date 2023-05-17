@@ -24,18 +24,10 @@ public class PaymentController {
      * Надо будет объединить оба метода в один
      * Разделение пойдет согласно QE11, QE10
      */
-    @PostMapping(value = "/checkPayment", produces = {"application/xml"})
-    public ResponseEntity<XmlData> checkPayment(@RequestBody XmlData request) {
-        XmlData response = paymentService.check(request);
+
+    @PostMapping(value = "/pay", produces = {"application/xml"})
+    public ResponseEntity<XmlData> pay(@RequestBody XmlData request) {
+        XmlData response = paymentService.execute(request);
         return ResponseEntity.ok(response);
     }
-
-    @PostMapping(value = "/createTransfer", produces = {"application/xml"})
-    public ResponseEntity<XmlData> createTransfer(@RequestBody XmlData request) {
-        System.out.println("request: " + request); // todo logging logback сделать логирование
-        XmlData response = paymentService.pay(request);
-        return ResponseEntity.ok(response);
-    }
-
-
 }

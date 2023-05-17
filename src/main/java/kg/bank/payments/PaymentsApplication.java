@@ -2,6 +2,7 @@ package kg.bank.payments;
 
 import kg.bank.payments.enums.AccountStatus;
 import kg.bank.payments.enums.ServiceJobStatus;
+import kg.bank.payments.model.entity.ServiceJob;
 import kg.bank.payments.model.entity.ServiceJobDetail;
 import kg.bank.payments.repository.*;
 import kg.bank.payments.utils.DateUtil;
@@ -27,11 +28,10 @@ public class PaymentsApplication {
 								 ) {
 		return args -> {
 			extracted1(serviceJobRepository);
-//			extracted2(accountRepository, statusAccountRepository);
+//			extracted2(accountRepository);
 //			extracted3(serviceJobRepository, accountRepository, serviceJobDetailRepository);
 //			extracted4(serviceJobRepository, accountRepository, serviceJobDetailRepository);
 //			extracted5(serviceJobRepository, accountRepository, serviceJobDetailRepository);
-//			extracted6(accountRepository, balanceAccountRepository);
 		};
 	}
 
@@ -173,7 +173,9 @@ public class PaymentsApplication {
 
 	private static void extracted1(ServiceJobRepository serviceJobRepository) {
 		for (long i = 1; i <= 3; i++) {
-
+			ServiceJob.builder()
+					.name("")
+					.status(ServiceJobStatus.ACTIVE);
 		}
 	}
 }
