@@ -12,8 +12,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
-@ToString
 @AllArgsConstructor
+@ToString
+@Builder
 public class Body {
 
     @XmlAttribute(name = "SERVICE_ID")

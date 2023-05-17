@@ -1,41 +1,33 @@
-package kg.bank.payments.model.entity;
+package kg.bank.payments.model.entity.serviceId;
 
-import kg.bank.payments.model.entity.account.Account;
-import kg.bank.payments.model.entity.serviceId.Service;
+import kg.bank.payments.enums.ServiceJobState;
 import kg.bank.payments.utils.DateUtil;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Table(name = "tb_service_details")
+@Table(name = "tb_service_statuses")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ServiceDetail {
+public class StatusServiceJob {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "service_id", referencedColumnName = "id")
-    Service service;
-
-    @ManyToOne
-    @JoinColumn(name = "account_id", referencedColumnName = "id")
-    Account account;
-
-    @Column(name = "percent_sum")
-    BigDecimal percentSum;
-
-    @Column(name = "fix_sum")
-    BigDecimal fixSum;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "state", nullable = false)
+    ServiceJobState state;
 
     @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss:S")
     @Column(name = "start_date", nullable = false)
@@ -44,6 +36,10 @@ public class ServiceDetail {
     @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss:S")
     @Column(name = "end_date", nullable = false)
     Date endDate;
+
+    @ManyToOne
+    @JoinColumn(name = "service_id", referencedColumnName = "id")
+    ServiceJob serviceJob;
 
     @PrePersist
     private void setDates() {

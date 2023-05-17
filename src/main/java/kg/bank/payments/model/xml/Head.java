@@ -16,8 +16,9 @@ import java.util.Date;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
-@ToString
 @AllArgsConstructor
+@ToString
+@Builder
 public class Head {
 
     @XmlAttribute(name = "DTS")

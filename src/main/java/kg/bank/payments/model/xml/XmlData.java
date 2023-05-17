@@ -13,8 +13,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
-@ToString
 @AllArgsConstructor
+@ToString
+@Builder
 public class XmlData {
 
     @XmlElement(name = "HEAD")

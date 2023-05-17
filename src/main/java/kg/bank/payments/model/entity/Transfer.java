@@ -1,9 +1,7 @@
 package kg.bank.payments.model.entity;
 
 import kg.bank.payments.enums.PaymentState;
-import kg.bank.payments.model.entity.account.Account;
-import kg.bank.payments.model.entity.serviceId.Service;
-import kg.bank.payments.utils.DateUtil;
+import kg.bank.payments.model.entity.serviceId.ServiceJob;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -44,7 +42,7 @@ public class Transfer {
 
     @ManyToOne
     @JoinColumn(name = "service_id", referencedColumnName = "id")
-    Service service;
+    ServiceJob serviceJob;
 
     @OneToMany(mappedBy = "transfer", cascade = CascadeType.ALL)
     List<SubTransfer> subTransferList;

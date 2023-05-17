@@ -1,6 +1,6 @@
 package kg.bank.payments.model.entity.serviceId;
 
-import kg.bank.payments.model.entity.ServiceDetail;
+import kg.bank.payments.model.entity.ServiceJobDetail;
 import kg.bank.payments.model.entity.Transfer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Service {
+public class ServiceJob {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,10 +31,10 @@ public class Service {
 //    List<BalanceService> balanceList;
 
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
-    List<StatusService> statuseList;
+    List<StatusServiceJob> statuseList;
 
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
-    List<ServiceDetail> serviceDetailList;
+    List<ServiceJobDetail> serviceJobDetailList;
 
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
     List<Transfer> transferList;

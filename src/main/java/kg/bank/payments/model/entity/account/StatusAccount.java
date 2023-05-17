@@ -1,7 +1,6 @@
 package kg.bank.payments.model.entity.account;
 
 import kg.bank.payments.enums.AccountState;
-import kg.bank.payments.enums.ServiceState;
 import kg.bank.payments.utils.DateUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 package kg.bank.payments.model.entity.account;
 
-import kg.bank.payments.model.entity.ServiceDetail;
+import kg.bank.payments.model.entity.ServiceJobDetail;
 import kg.bank.payments.model.entity.SubTransfer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -34,7 +34,7 @@ public class Account {
     List<StatusAccount> statuseList;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    List<ServiceDetail> serviceDetailList;
+    List<ServiceJobDetail> serviceJobDetailList;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     List<SubTransfer> subTransferList;

@@ -1,7 +1,6 @@
 package kg.bank.payments.model.entity;
 
 import kg.bank.payments.enums.PaymentState;
-import kg.bank.payments.enums.ServiceState;
 import kg.bank.payments.model.entity.account.Account;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
