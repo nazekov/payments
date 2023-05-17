@@ -1,12 +1,7 @@
-package kg.bank.payments.model.entity.serviceId;
+package kg.bank.payments.model.entity;
 
-import kg.bank.payments.model.entity.ServiceJobDetail;
-import kg.bank.payments.model.entity.Transfer;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import kg.bank.payments.enums.ServiceJobStatus;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 import java.util.List;
@@ -18,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 public class ServiceJob {
 
     @Id
@@ -27,15 +23,13 @@ public class ServiceJob {
     @Column(name = "name", nullable = false, unique = true)
     String name;
 
-//    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
-//    List<BalanceService> balanceList;
-
-    @OneToMany(mappedBy = "serviceJob", cascade = CascadeType.ALL)
-    List<StatusServiceJob> statuseList;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    ServiceJobStatus status;
 
     @OneToMany(mappedBy = "serviceJob", cascade = CascadeType.ALL)
     List<ServiceJobDetail> serviceJobDetailList;
 
     @OneToMany(mappedBy = "serviceJob", cascade = CascadeType.ALL)
-    List<Transfer> transferList;
+    List<Payment> paymentList;
 }

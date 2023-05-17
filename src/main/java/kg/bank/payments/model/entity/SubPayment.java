@@ -1,6 +1,6 @@
-package kg.bank.payments.model.entity.account;
+package kg.bank.payments.model.entity;
 
-import kg.bank.payments.utils.DateUtil;
+import kg.bank.payments.enums.PaymentStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -9,36 +9,35 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Table(name = "tb_account_balances")
+@Table(name = "tb_sub_payments")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BalanceAccount {
+@Builder
+public class SubPayment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "balance")
-    BigDecimal balance;
+    @Column(name = "sum")
+    BigDecimal sum;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    PaymentStatus status;
 
     @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss:S")
-    @Column(name = "start_date", nullable = false)
-    Date startDate;
-
-    @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss:S")
-    @Column(name = "end_date", nullable = false)
-    Date endDate;
+    @Column(name = "created_date", nullable = false)
+    Date created;
 
     @ManyToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     Account account;
 
-    @PrePersist
-    private void setDates() {
-        setStartDate(new Date());
-        setEndDate(DateUtil.getInstance().getEndDate());
-    }
+    @ManyToOne
+    @JoinColumn(name = "payment_id", referencedColumnName = "id")
+    Payment payment;
 }

@@ -1,6 +1,6 @@
 package kg.bank.payments.enums;
 
-public enum AccountState {
+public enum ServiceJobStatus {
 
     ACTIVE,
     DEPRECATED,

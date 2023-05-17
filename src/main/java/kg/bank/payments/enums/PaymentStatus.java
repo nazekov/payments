@@ -1,6 +1,6 @@
 package kg.bank.payments.enums;
 
-public enum PaymentState {
+public enum PaymentStatus {
 
     OK,
     UNSUCCESSFUL

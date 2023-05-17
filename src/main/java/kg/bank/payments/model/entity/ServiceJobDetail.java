@@ -1,14 +1,9 @@
 package kg.bank.payments.model.entity;
 
-import kg.bank.payments.model.entity.account.Account;
-import kg.bank.payments.model.entity.serviceId.ServiceJob;
-import kg.bank.payments.utils.DateUtil;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Entity
 @Table(name = "tb_service_details")
@@ -17,6 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 public class ServiceJobDetail {
 
     @Id
@@ -36,18 +32,4 @@ public class ServiceJobDetail {
 
     @Column(name = "fix_sum")
     BigDecimal fixSum;
-
-    @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss:S")
-    @Column(name = "start_date", nullable = false)
-    Date startDate;
-
-    @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss:S")
-    @Column(name = "end_date", nullable = false)
-    Date endDate;
-
-    @PrePersist
-    private void setDates() {
-        setStartDate(new Date());
-        setEndDate(DateUtil.getInstance().getEndDate());
-    }
 }

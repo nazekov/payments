@@ -1,7 +1,6 @@
 package kg.bank.payments.model.entity;
 
-import kg.bank.payments.enums.PaymentState;
-import kg.bank.payments.model.entity.serviceId.ServiceJob;
+import kg.bank.payments.enums.PaymentStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -11,13 +10,14 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "tb_transfers")
+@Table(name = "tb_payments")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Transfer {
+@Builder
+public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,8 +34,8 @@ public class Transfer {
     Date created;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "state", nullable = false)
-    PaymentState paymentState;
+    @Column(name = "status", nullable = false)
+    PaymentStatus status;
 
     @Column(name = "phone", nullable = false)
     String phone;
@@ -44,6 +44,6 @@ public class Transfer {
     @JoinColumn(name = "service_id", referencedColumnName = "id")
     ServiceJob serviceJob;
 
-    @OneToMany(mappedBy = "transfer", cascade = CascadeType.ALL)
-    List<SubTransfer> subTransferList;
+    @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL)
+    List<SubPayment> subPaymentList;
 }

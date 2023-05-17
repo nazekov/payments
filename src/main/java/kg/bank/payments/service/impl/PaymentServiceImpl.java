@@ -1,14 +1,12 @@
 package kg.bank.payments.service.impl;
 
-import kg.bank.payments.model.entity.serviceId.ServiceJob;
+import kg.bank.payments.model.entity.ServiceJob;
 import kg.bank.payments.model.xml.Body;
 import kg.bank.payments.model.xml.XmlData;
 import kg.bank.payments.repository.ServiceJobRepository;
 import kg.bank.payments.service.PaymentService;
-import kg.bank.payments.service.StatusServJobService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.Optional;
 
@@ -17,12 +15,8 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final ServiceJobRepository serviceJobRepository;
 
-    private final StatusServJobService statusServJobService;
-
-    public PaymentServiceImpl(ServiceJobRepository serviceJobRepository,
-                              StatusServJobService statusServJobService) {
+    public PaymentServiceImpl(ServiceJobRepository serviceJobRepository) {
         this.serviceJobRepository = serviceJobRepository;
-        this.statusServJobService = statusServJobService;
     }
 
     @Override
@@ -53,7 +47,7 @@ public class PaymentServiceImpl implements PaymentService {
             Весь этот код перенести в  pay()
          */
 
-        if (statusServJobService.isActiveNow(serviceJob.getId())) {
+        if (/*statusServJobService.isActiveNow(serviceJob.getId())*/true) {
             //To do async
             System.out.println("============To do async============");
             long serviceId = Long.parseLong(request.getBody().getServiceId());

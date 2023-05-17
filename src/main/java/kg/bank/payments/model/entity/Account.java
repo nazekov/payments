@@ -1,14 +1,10 @@
-package kg.bank.payments.model.entity.account;
+package kg.bank.payments.model.entity;
 
-import kg.bank.payments.model.entity.ServiceJobDetail;
-import kg.bank.payments.model.entity.SubTransfer;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import kg.bank.payments.enums.AccountStatus;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -18,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 public class Account {
 
     @Id
@@ -27,15 +24,16 @@ public class Account {
     @Column(name = "name", nullable = false, unique = true)
     String name;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    List<BalanceAccount> balanceList;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    AccountStatus status;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    List<StatusAccount> statuseList;
+    @Column(name = "balance")
+    BigDecimal balance;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     List<ServiceJobDetail> serviceJobDetailList;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    List<SubTransfer> subTransferList;
+    List<SubPayment> subPaymentList;
 }

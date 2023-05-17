@@ -2,13 +2,10 @@ package kg.bank.payments.model.xml;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Date;
 
 @XmlRootElement(name = "HEAD")
 @XmlAccessorType(XmlAccessType.FIELD)
