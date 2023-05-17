@@ -30,12 +30,12 @@ public class ServiceJob {
 //    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
 //    List<BalanceService> balanceList;
 
-    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "serviceJob", cascade = CascadeType.ALL)
     List<StatusServiceJob> statuseList;
 
-    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "serviceJob", cascade = CascadeType.ALL)
     List<ServiceJobDetail> serviceJobDetailList;
 
-    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "serviceJob", cascade = CascadeType.ALL)
     List<Transfer> transferList;
 }
