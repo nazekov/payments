@@ -1,5 +1,6 @@
 package kg.bank.payments.service.impl;
 
+import kg.bank.payments.enums.ServiceJobStatus;
 import kg.bank.payments.model.entity.ServiceJob;
 import kg.bank.payments.model.xml.Body;
 import kg.bank.payments.model.xml.XmlData;
@@ -24,8 +25,8 @@ public class PaymentServiceImpl implements PaymentService {
         Long serviceId = Long.parseLong(request.getBody().getServiceId());
         Optional<ServiceJob> optionalServiceJob = serviceJobRepository.findById(serviceId);
         return optionalServiceJob.isPresent() ?
-                getResponseOk(request, "200", null) :
-                getResponseBad(request, "420", "Лицевой счет не найден");
+                getResponse(request, "200", null, null) :
+                getResponse(request, "420", null, "Лицевой счет не найден");
     }
 
     @Override
@@ -34,11 +35,10 @@ public class PaymentServiceImpl implements PaymentService {
         Optional<ServiceJob> optionalServiceJob = serviceJobRepository.findById(serviceId);
 
         if (optionalServiceJob.isEmpty()) {
-             return getResponseBad(request, "420", "Лицевой счет не найден");
+             return getResponse(request, "420", null,"Лицевой счет не найден");
         }
 
-        getResponseTransfer(request, optionalServiceJob.get());
-        return null;
+        return getResponsePayment(request, optionalServiceJob.get());
     }
 
     @Override
@@ -52,13 +52,13 @@ public class PaymentServiceImpl implements PaymentService {
         return null;
     }
 
-    private XmlData getResponseTransfer(XmlData request, ServiceJob serviceJob) {
+    private XmlData getResponsePayment(XmlData request, ServiceJob serviceJob) {
 
         /*
             Весь этот код перенести в  pay()
          */
 
-        if (/*statusServJobService.isActiveNow(serviceJob.getId())*/true) {
+        if (serviceJob.getStatus() == ServiceJobStatus.ACTIVE) {
             //To do async
             System.out.println("============To do async============");
             long serviceId = Long.parseLong(request.getBody().getServiceId());
@@ -69,8 +69,8 @@ public class PaymentServiceImpl implements PaymentService {
             long start = System.currentTimeMillis();
 
             try {
-                acceptPayment(sum); // 10ms
-                distributePaymentToAccounts(sum); // 0ms
+                acceptPayment(serviceId, sum, phone); // 10ms
+                distributePaymentToAccounts(serviceId, sum, phone); // 0ms
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -79,47 +79,39 @@ public class PaymentServiceImpl implements PaymentService {
 
             return null;
         }
-        return getResponseBad(request, "424", "Сервис временно недоступен");
+        return getResponse(request, "424", null, "Сервис временно недоступен");
     }
 
-    public void acceptPayment(BigDecimal amount) throws InterruptedException {
+    public void acceptPayment(Long id, BigDecimal sum, String phone)
+                                                throws InterruptedException {
 
         // Обработка оплаты
         System.out.println("Start acceptPayment ");
-        Thread.sleep(2000L);
+//        Thread.sleep(2000L);
+
         System.out.println("Finish acceptPayment ");
 //        return CompletableFuture.completedFuture(null);
     }
 
     @Async //только этот метод асинхронный
-    public void distributePaymentToAccounts(BigDecimal amount)
+    public void distributePaymentToAccounts(Long id, BigDecimal sum, String phone)
             throws InterruptedException {
 
         // Распределение суммы на несколько аккаунтов
         System.out.println("Start distributePaymentToAccounts ");
         Thread.sleep(5000L);
         System.out.println("Finish distributePaymentToAccounts ");
-//        return CompletableFuture.completedFuture(null);
     }
 
-    /**
-     *
-     * Объединить логику два метода getResponseBad и getResponseOk
-     */
-    private XmlData getResponseBad(XmlData request, String code, String msg) {
+    private XmlData getResponse(XmlData request, String code,
+                                String msg, String errMsg) {
         return XmlData.builder()
                 .head(request.getHead())
                 .body(Body.builder()
                         .status(code)
-                        .errMsg(msg)
+                        .msg(msg)
+                        .errMsg(errMsg)
                         .build())
-                .build();
-    }
-
-    private XmlData getResponseOk(XmlData request, String code, String msg) {
-        return XmlData.builder()
-                .head(request.getHead())
-                .body(Body.builder().status(code).msg(msg).build())
                 .build();
     }
 }
