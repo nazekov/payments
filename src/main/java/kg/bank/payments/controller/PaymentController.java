@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.math.BigDecimal;
 
 @RestController
@@ -33,13 +32,13 @@ public class PaymentController {
         } else if (op.equals("QE10")) {
 //            return pay(request);
             BigDecimal sum = new BigDecimal(request.getBody().getSum());
-            String phone = request.getBody().getParam1();
+//            String phone = request.getBody().getParam1();
 
             Payment payment = paymentService.pay(request);
             try {
                 paymentService.distributePaymentToAccounts(
                         payment.getServiceJob().getId(),
-                        sum, payment );
+                        sum, payment);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

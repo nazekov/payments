@@ -13,6 +13,7 @@ import kg.bank.payments.repository.PaymentRepository;
 import kg.bank.payments.repository.ServiceJobRepository;
 import kg.bank.payments.repository.SubPaymentRepository;
 import kg.bank.payments.service.PaymentService;
+import lombok.SneakyThrows;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
@@ -69,7 +70,6 @@ public class PaymentServiceImpl implements PaymentService {
             // Start the clock
             long start = System.currentTimeMillis();
 
-//            try {
             Payment payment = acceptPayment(serviceId, sum, phone, request);// 0ms
 //                distributePaymentToAccounts(serviceId, sum, payment);
 //                distributePaymentToAccounts(serviceId, sum, phone); // 10ms
@@ -149,32 +149,22 @@ public class PaymentServiceImpl implements PaymentService {
 
         payment = paymentRepository.save(payment);
 
-        //метод распределяет сумму
-//        distributePaymentToAccounts(id, sum, payment);
-
-//        XmlData response = XmlData.builder()
-//                .head(request.getHead())
-//                .body(Body.builder()
-//                        .status("250")
-//                        .msg("Платеж успешно проведен")
-//                        .build())
-//                .build();
-
         System.out.println("Finish acceptPayment ");
 //        return response;
         return payment;
     }
 
     @Async
-    public void distributePaymentToAccounts(Long id, BigDecimal sum, Payment payment)
-                                                        throws InterruptedException {
+    public void distributePaymentToAccounts(Long id, BigDecimal sum, Payment payment) throws InterruptedException {
         // Распределение суммы на несколько аккаунтов
         System.out.println("Start distributePaymentToAccounts ");
+
         ServiceJob serviceJob = serviceJobRepository.findById(id)
             .orElseThrow(
     () -> new IllegalArgumentException("Сервис не найден.")
             );
 
+        Thread.sleep(3000L);
         serviceJob.getServiceJobDetailList()
             .forEach(serviceJobDetail -> {
                 Account account = serviceJobDetail.getAccount();
@@ -196,7 +186,7 @@ public class PaymentServiceImpl implements PaymentService {
                 subPaymentRepository.save(subPayment);
             });
 
-        Thread.sleep(3000L);
+
         System.out.println("Finish distributePaymentToAccounts ");
     }
 
