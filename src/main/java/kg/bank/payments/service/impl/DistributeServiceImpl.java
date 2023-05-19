@@ -11,6 +11,8 @@ import kg.bank.payments.repository.ServiceJobRepository;
 import kg.bank.payments.repository.SubPaymentRepository;
 import kg.bank.payments.service.DistributeService;
 import lombok.SneakyThrows;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
@@ -19,6 +21,8 @@ import java.util.Date;
 
 @Service
 public class DistributeServiceImpl implements DistributeService {
+
+    private static final Logger log = LoggerFactory.getLogger(DistributeServiceImpl.class);
 
     private final ServiceJobRepository serviceJobRepository;
     private final AccountRepository accountRepository;
@@ -37,12 +41,13 @@ public class DistributeServiceImpl implements DistributeService {
     @SneakyThrows
     @Override
     public void distributePaymentToAccounts(Long id, BigDecimal sum, Payment payment) {
-        System.out.println("Start distributePaymentToAccounts ");
+        log.info("Start distributePaymentToAccounts ");
         ServiceJob serviceJob = serviceJobRepository.findById(id)
             .orElseThrow(
                     () -> new IllegalArgumentException("Сервис не найден.")
             );
-        System.out.println("============To do Async============");
+
+        log.info("============To do Async============");
         long start = System.currentTimeMillis();
 
         serviceJob.getServiceJobDetailList().forEach(serviceJobDetail -> {
@@ -53,23 +58,23 @@ public class DistributeServiceImpl implements DistributeService {
             }
             Account account = serviceJobDetail.getAccount();
 
-                BigDecimal percentSum = serviceJobDetail.getPercentSum();
-                BigDecimal percentUnit = percentSum.divide(new BigDecimal(100));
-                BigDecimal calcSum = sum.multiply(percentUnit);
-                account.setBalance(account.getBalance().add(calcSum));
-                account = accountRepository.save(account);
+            BigDecimal percentSum = serviceJobDetail.getPercentSum();
+            BigDecimal percentUnit = percentSum.divide(new BigDecimal(100));
+            BigDecimal calcSum = sum.multiply(percentUnit);
+            account.setBalance(account.getBalance().add(calcSum));
+            account = accountRepository.save(account);
 
-                SubPayment subPayment = SubPayment.builder()
-                        .account(account)
-                        .payment(payment)
-                        .sum(calcSum)
-                        .status(PaymentStatus.OK)
-                        .created(new Date())
-                        .build();
+            SubPayment subPayment = SubPayment.builder()
+                    .account(account)
+                    .payment(payment)
+                    .sum(calcSum)
+                    .status(PaymentStatus.DONE)
+                    .created(new Date())
+                    .build();
 
-                subPaymentRepository.save(subPayment);
-            });
-        System.out.println("=========Elapsed time Async: " + (System.currentTimeMillis() - start));
-        System.out.println("Finish distributePaymentToAccounts ");
+            subPaymentRepository.save(subPayment);
+        });
+        log.info("=========Elapsed time Async: " + (System.currentTimeMillis() - start));
+        log.info("Finish distributePaymentToAccounts ");
     }
 }

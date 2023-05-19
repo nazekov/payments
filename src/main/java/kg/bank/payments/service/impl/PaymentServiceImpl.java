@@ -10,6 +10,8 @@ import kg.bank.payments.repository.PaymentRepository;
 import kg.bank.payments.repository.ServiceJobRepository;
 import kg.bank.payments.service.DistributeService;
 import kg.bank.payments.service.PaymentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -18,6 +20,7 @@ import java.util.Optional;
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
+    private static final Logger log = LoggerFactory.getLogger(PaymentServiceImpl.class);
     private final ServiceJobRepository serviceJobRepository;
     private final PaymentRepository paymentRepository;
     private final DistributeService distributeService;
@@ -28,15 +31,6 @@ public class PaymentServiceImpl implements PaymentService {
         this.serviceJobRepository = serviceJobRepository;
         this.paymentRepository = paymentRepository;
         this.distributeService = distributeService;
-    }
-
-    @Override
-    public XmlData check(XmlData request) {
-        Long serviceId = Long.parseLong(request.getBody().getServiceId());
-        Optional<ServiceJob> optionalServiceJob = serviceJobRepository.findById(serviceId);
-        return optionalServiceJob.isPresent() ?
-                getResponse(request, "200", null, null) :
-                getResponse(request, "420", null, "Лицевой счет не найден");
     }
 
     @Override
@@ -51,6 +45,15 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    public XmlData check(XmlData request) {
+        Long serviceId = Long.parseLong(request.getBody().getServiceId());
+        Optional<ServiceJob> optionalServiceJob = serviceJobRepository.findById(serviceId);
+        return optionalServiceJob.isPresent() ?
+                getResponse(request, "200", null, null) :
+                getResponse(request, "420", null, "Лицевой счет не найден");
+    }
+
+    @Override
     public XmlData pay(XmlData request) {
         Long serviceId = Long.parseLong(request.getBody().getServiceId());
         Optional<ServiceJob> optionalServiceJob = serviceJobRepository.findById(serviceId);
@@ -61,17 +64,17 @@ public class PaymentServiceImpl implements PaymentService {
         ServiceJob serviceJob = optionalServiceJob.get();
 
         if (serviceJob.getStatus() == ServiceJobStatus.ACTIVE) {
-            System.out.println("============To do pay(============");
+            log.info("============To do pay(============");
             BigDecimal sum = new BigDecimal(request.getBody().getSum());
             String phone = request.getBody().getParam1();
 
             // Start the clock
             long start = System.currentTimeMillis();
 
-            Payment payment = acceptPayment(serviceId, sum, phone);// 0ms
+            Payment payment = acceptPayment(serviceId, sum, phone);// 10ms
             distributeService.distributePaymentToAccounts(serviceId, sum, payment);
 
-            System.out.println("=========Elapsed time: " + (System.currentTimeMillis() - start));
+            log.info("=========Elapsed time: " + (System.currentTimeMillis() - start));
 
             return XmlData.builder()
                     .head(request.getHead())
@@ -90,7 +93,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .postMoney(sum)
                 .distributedMoney(sum)
                 .phone(phone)
-                .status(PaymentStatus.OK)
+                .status(PaymentStatus.DONE)
                 .created(new Date())
                 .serviceJob(serviceJobRepository.findById(id).get())
                 .build();
