@@ -42,6 +42,8 @@ public class DistributeServiceImpl implements DistributeService {
             .orElseThrow(
                     () -> new IllegalArgumentException("Сервис не найден.")
             );
+        System.out.println("============To do Async============");
+        long start = System.currentTimeMillis();
 
         serviceJob.getServiceJobDetailList().forEach(serviceJobDetail -> {
             try {
@@ -67,7 +69,7 @@ public class DistributeServiceImpl implements DistributeService {
 
                 subPaymentRepository.save(subPayment);
             });
-
+        System.out.println("=========Elapsed time Async: " + (System.currentTimeMillis() - start));
         System.out.println("Finish distributePaymentToAccounts ");
     }
 }

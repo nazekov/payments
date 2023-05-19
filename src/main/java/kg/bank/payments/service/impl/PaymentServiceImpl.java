@@ -61,8 +61,7 @@ public class PaymentServiceImpl implements PaymentService {
         ServiceJob serviceJob = optionalServiceJob.get();
 
         if (serviceJob.getStatus() == ServiceJobStatus.ACTIVE) {
-            //To do async
-            System.out.println("============To do async============");
+            System.out.println("============To do pay(============");
             BigDecimal sum = new BigDecimal(request.getBody().getSum());
             String phone = request.getBody().getParam1();
 
