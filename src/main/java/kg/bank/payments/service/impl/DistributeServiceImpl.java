@@ -1,5 +1,6 @@
 package kg.bank.payments.service.impl;
 
+import kg.bank.payments.enums.AccountStatus;
 import kg.bank.payments.enums.PaymentStatus;
 import kg.bank.payments.model.entity.Account;
 import kg.bank.payments.model.entity.Payment;
@@ -58,17 +59,23 @@ public class DistributeServiceImpl implements DistributeService {
             }
             Account account = serviceJobDetail.getAccount();
 
+            PaymentStatus paymentStatus = PaymentStatus.CREATED;
+
             BigDecimal percentSum = serviceJobDetail.getPercentSum();
             BigDecimal percentUnit = percentSum.divide(new BigDecimal(100));
             BigDecimal calcSum = sum.multiply(percentUnit);
-            account.setBalance(account.getBalance().add(calcSum));
-            account = accountRepository.save(account);
+
+            if (account.getStatus() == AccountStatus.ACTIVE) {
+                account.setBalance(account.getBalance().add(calcSum));
+                account = accountRepository.save(account);
+                paymentStatus = PaymentStatus.DONE;
+            }
 
             SubPayment subPayment = SubPayment.builder()
                     .account(account)
                     .payment(payment)
                     .sum(calcSum)
-                    .status(PaymentStatus.DONE)
+                    .status(paymentStatus)
                     .created(new Date())
                     .build();
 
