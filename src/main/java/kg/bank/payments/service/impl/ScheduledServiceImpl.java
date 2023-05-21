@@ -33,6 +33,6 @@ public class ScheduledServiceImpl implements ScheduledService {
             .flatMap(account -> account.getSubPaymentList().stream())
             .filter(subPayment -> subPayment.getStatus() == PaymentStatus.CREATED)
             .peek(subPayment ->  subPaymentService.processSubPayment(subPayment));
-        log.info("-------Start Scheduled subPayment--------");
+        log.info("-------Finish Scheduled subPayment--------");
     }
 }
