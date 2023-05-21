@@ -6,6 +6,8 @@ import kg.bank.payments.model.entity.SubPayment;
 import kg.bank.payments.repository.AccountRepository;
 import kg.bank.payments.service.AccountService;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -26,11 +28,9 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account updateAccountBalance(SubPayment subPayment) {
         Account account = subPayment.getAccount();
-        if (account.getStatus() == AccountStatus.ACTIVE) {
-            BigDecimal newBalance = account.getBalance().add(subPayment.getSum());
-            account.setBalance(newBalance);
-            accountRepository.save(account);
-        }
+        BigDecimal newBalance = account.getBalance().add(subPayment.getSum());
+        account.setBalance(newBalance);
+        accountRepository.save(account);
         return account;
     }
 

@@ -61,9 +61,9 @@ public class PaymentServiceImpl implements PaymentService {
         if (optionalServiceJob.isEmpty()) {
             return getResponse(request, "420", null,"Лицевой счет не найден");
         }
-        //ServiceJob serviceJob = optionalServiceJob.get();
+        ServiceJob serviceJob = optionalServiceJob.get();
 
-       // if (serviceJob.getStatus() == ServiceJobStatus.ACTIVE) {
+        if (serviceJob.getStatus() == ServiceJobStatus.ACTIVE) {
             log.info("============To do pay(============");
             BigDecimal sum = new BigDecimal(request.getBody().getSum());
             String phone = request.getBody().getParam1();
@@ -71,8 +71,8 @@ public class PaymentServiceImpl implements PaymentService {
             // Start the clock
             long start = System.currentTimeMillis();
 
-            Payment payment = acceptPayment(serviceId, sum, phone);// 10ms
-            distributeService.distributePaymentToAccounts(serviceId, sum, payment);
+            Payment payment = acceptPayment(serviceJob, sum, phone);
+            distributeService.distributePaymentToAccounts(serviceJob, sum, payment);
 
             log.info("=========Elapsed time: " + (System.currentTimeMillis() - start));
 
@@ -83,19 +83,19 @@ public class PaymentServiceImpl implements PaymentService {
                             .msg("Платеж успешно проведен")
                             .build())
                     .build();
-        //}
-//        return getResponse(request, "424", null, "Сервис временно недоступен");
+        }
+        return getResponse(request, "424", null, "Сервис временно недоступен");
     }
 
     // Обработка оплаты
-    public Payment acceptPayment(Long id, BigDecimal sum, String phone) {
+    public Payment acceptPayment(ServiceJob serviceJob, BigDecimal sum, String phone) {
         Payment payment = Payment.builder()
                 .postMoney(sum)
                 .distributedMoney(sum)
                 .phone(phone)
                 .status(PaymentStatus.DONE)
                 .created(new Date())
-                .serviceJob(jobService.findById(id).get())
+                .serviceJob(serviceJob)
                 .build();
         return paymentRepository.save(payment);
     }

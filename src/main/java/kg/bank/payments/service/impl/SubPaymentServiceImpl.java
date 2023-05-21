@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 public class SubPaymentServiceImpl implements SubPaymentService {
 
@@ -36,12 +38,11 @@ public class SubPaymentServiceImpl implements SubPaymentService {
         //исскусственная задержка времени для примера долгого обновления баланса аккаунта
         Thread.sleep(5000L);
 
-        Account account = accountService.updateAccountBalance(subPayment);
-        if (account.getStatus() == AccountStatus.ACTIVE) {
-            subPayment.setStatus(PaymentStatus.DONE);
-            subPaymentRepository.save(subPayment);
-            log.info("-----Changed Status subPayment to DONE");
-        }
+        accountService.updateAccountBalance(subPayment);
+
+        subPayment.setStatus(PaymentStatus.DONE);
+        subPaymentRepository.save(subPayment);
+        log.info("-----Changed Status subPayment to DONE");
     }
 
     @Override

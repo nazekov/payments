@@ -40,13 +40,8 @@ public class DistributeServiceImpl implements DistributeService {
     @Async
     @SneakyThrows
     @Override
-    public void distributePaymentToAccounts(Long id, BigDecimal sum, Payment payment) {
+    public void distributePaymentToAccounts(ServiceJob serviceJob, BigDecimal sum, Payment payment) {
         log.info("Start distributePaymentToAccounts ");
-        ServiceJob serviceJob = jobService.findById(id)
-            .orElseThrow(
-                () -> new IllegalArgumentException("Сервис не найден")
-            );
-
         log.info("============To do Async============");
         long start = System.currentTimeMillis();
 
