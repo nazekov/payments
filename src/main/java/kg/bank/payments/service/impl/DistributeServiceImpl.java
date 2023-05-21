@@ -6,11 +6,10 @@ import kg.bank.payments.model.entity.Account;
 import kg.bank.payments.model.entity.Payment;
 import kg.bank.payments.model.entity.ServiceJob;
 import kg.bank.payments.model.entity.SubPayment;
-import kg.bank.payments.repository.AccountRepository;
-import kg.bank.payments.repository.PaymentRepository;
-import kg.bank.payments.repository.ServiceJobRepository;
-import kg.bank.payments.repository.SubPaymentRepository;
+import kg.bank.payments.service.AccountService;
 import kg.bank.payments.service.DistributeService;
+import kg.bank.payments.service.ServiceJobService;
+import kg.bank.payments.service.SubPaymentService;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,17 +23,17 @@ import java.util.Date;
 public class DistributeServiceImpl implements DistributeService {
 
     private static final Logger log = LoggerFactory.getLogger(DistributeServiceImpl.class);
+    private final AccountService accountService;
+    private final SubPaymentService subPaymentService;
+    private final ServiceJobService jobService;
 
-    private final ServiceJobRepository serviceJobRepository;
-    private final AccountRepository accountRepository;
-    private final SubPaymentRepository subPaymentRepository;
-
-    public DistributeServiceImpl(ServiceJobRepository serviceJobRepository,
-                                 AccountRepository accountRepository,
-                                 SubPaymentRepository subPaymentRepository) {
-        this.serviceJobRepository = serviceJobRepository;
-        this.accountRepository = accountRepository;
-        this.subPaymentRepository = subPaymentRepository;
+    public DistributeServiceImpl(
+            AccountService accountService,
+            SubPaymentService subPaymentService,
+            ServiceJobService jobService) {
+        this.accountService = accountService;
+        this.subPaymentService = subPaymentService;
+        this.jobService = jobService;
     }
 
     @Transactional
@@ -43,9 +42,9 @@ public class DistributeServiceImpl implements DistributeService {
     @Override
     public void distributePaymentToAccounts(Long id, BigDecimal sum, Payment payment) {
         log.info("Start distributePaymentToAccounts ");
-        ServiceJob serviceJob = serviceJobRepository.findById(id)
+        ServiceJob serviceJob = jobService.findById(id)
             .orElseThrow(
-                    () -> new IllegalArgumentException("Сервис не найден.")
+                () -> new IllegalArgumentException("Сервис не найден")
             );
 
         log.info("============To do Async============");
@@ -67,7 +66,7 @@ public class DistributeServiceImpl implements DistributeService {
 
             if (account.getStatus() == AccountStatus.ACTIVE) {
                 account.setBalance(account.getBalance().add(calcSum));
-                account = accountRepository.save(account);
+                account = accountService.save(account);
                 paymentStatus = PaymentStatus.DONE;
             }
 
@@ -79,7 +78,7 @@ public class DistributeServiceImpl implements DistributeService {
                     .created(new Date())
                     .build();
 
-            subPaymentRepository.save(subPayment);
+            subPaymentService.save(subPayment);
         });
         log.info("=========Elapsed time Async: " + (System.currentTimeMillis() - start));
         log.info("Finish distributePaymentToAccounts ");
