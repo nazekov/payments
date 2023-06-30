@@ -8,7 +8,6 @@ import kg.bank.payments.model.entity.ServiceJob;
 import kg.bank.payments.model.entity.SubPayment;
 import kg.bank.payments.service.AccountService;
 import kg.bank.payments.service.DistributeService;
-import kg.bank.payments.service.ServiceJobService;
 import kg.bank.payments.service.SubPaymentService;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
@@ -25,15 +24,11 @@ public class DistributeServiceImpl implements DistributeService {
     private static final Logger log = LoggerFactory.getLogger(DistributeServiceImpl.class);
     private final AccountService accountService;
     private final SubPaymentService subPaymentService;
-    private final ServiceJobService jobService;
 
-    public DistributeServiceImpl(
-            AccountService accountService,
-            SubPaymentService subPaymentService,
-            ServiceJobService jobService) {
+    public DistributeServiceImpl(AccountService accountService,
+                                SubPaymentService subPaymentService) {
         this.accountService = accountService;
         this.subPaymentService = subPaymentService;
-        this.jobService = jobService;
     }
 
     @Transactional
